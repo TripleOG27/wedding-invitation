@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded());
 app.use(express.static(__dirname+'/images'));
+app.use(express.static(__dirname+'/scripts'));
 //console.log('running')
 
 app.get('/', function(req, res) {
