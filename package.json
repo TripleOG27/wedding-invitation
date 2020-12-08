@@ -1,0 +1,20 @@
+{
+  "name": "wedding-invitation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "test"
+  },
+  "keywords": [
+    "wedding",
+    "invite",
+    "invitiation"
+  ],
+  "author": "TripleOG",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
