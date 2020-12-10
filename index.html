@@ -15,24 +15,80 @@
             display: block;
             margin: auto;
         }
+        .overlay {
+        position: fixed;
+        /* display: none; */
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 2;
+        cursor: pointer;
+        }
+
+        .text{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 50px;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        }
     </style>
+    
 </head>
 <body>
-    <img id="invite" class="center fit" src="DSC_0070.JPG" >
+    <img id="invite" class="center fit" src="DSC_0070.JPG" style="scale: ;" >
+    <img id="invitation" class="center fit" src="Text.jpg" style="position: relative;">
+    <!-- <div id='paw' class='overlay'><img id="catPaw" class="text"src="catPaw.jpg" style="-webkit-filter: invert(1); filter: invert(1); background-color: green;"></div> -->
+    <div id="paw" class="blink overlay"><div id="text" class="text"><p>Това писмо беше специално изпратено за Вас.</p><p> Кликнете за да го отворите!</p></div></div>
+    <div id="overlay" class="blink overlay"><div id="text2" class="text">Настинете тук за да приемете!</p></div>
 
 <script src="jquery.js"></script>
 <script type="text/javascript" language="JavaScript">
-    function set_body_height() { // set body height = window height
-        $('body').height($(window).height());
-        $('body').click(function(){
-                $('#invite').attr('src','Text.jpg')
-        })
+    function controlImages() { 
+        // $('#paw').css('display','block').show()
+        $('#paw').fadeIn(10000)
+        
+        $('#paw').click(function(){
+                $('#invite').hide(4000)
+                $('#paw').css('display','none').hide()
+                $('#invitation').show(4000)
+                setTimeout(()=>{
+                    $('#overlay').css('display','block')},10000)
+                // })
+                blink('#overlay')
+                                 
+                
+                
+        })       
+        
         
     }
+    function blink(selector){
+            $(selector).fadeOut(4000, function(){
+            $(this).fadeIn(4000, function(){
+            blink(this);
+         });
+        });
+        }
     $(document).ready(function() {
-        $(window).bind('resize', set_body_height);
-        set_body_height();
+        $('#paw').hide()
+        $('#overlay').hide()
+        $('#invitation').hide()
+        controlImages();
     });
 </script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
+
 </body>
 </html>

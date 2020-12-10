@@ -15,8 +15,13 @@
   "author": "TripleOG",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "express-generator": "^4.16.1",
+    "firebase": "^8.1.2",
     "jquery": "^3.5.1",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0",
     "serve": "^11.3.2"
   }
 }
