@@ -2,43 +2,26 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const port = process.env.PORT ||3000;
+let num = 0
+// const admin = require("firebase-admin");
 const Firebase = require('firebase');
+const firebase = require("firebase/app");
+
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const firebase = require("firebase/app");
 
-
-// require("firebase/auth");
-// require("firebase/firestore");
-// const firebaseConfig = {
-//     apiKey: "AIzaSyCrmsXIMrZ64aqBOy8qPDK4SwmgrcnzvhA",
-//     authDomain: "wedding-invitation-b1ce3.firebaseapp.com",
-//     databaseURL: "https://wedding-invitation-b1ce3-default-rtdb.europe-west1.firebasedatabase.app",
-//     projectId: "wedding-invitation-b1ce3",
-//     storageBucket: "wedding-invitation-b1ce3.appspot.com",
-//     messagingSenderId: "603995052886",
-//     appId: "1:603995052886:web:a2d92fa603b824797654f7",
-//     measurementId: "G-896KJ9QZ01"
-// };
-// firebase.initializeApp(firebaseConfig);
-// firebase.analytics();
-
-// const serviceAccount = require("wedding-invitation-b1ce3-firebase-adminsdk-g57q7-99e82e8fe9.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
-
-
-//console.log('all fine till here')
+const { removeListener } = require('process');
+const e = require('method-override');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(express.urlencoded());
+app.use(express.json());
 app.use(express.static(__dirname+'/images'));
 app.use(express.static(__dirname+'/scripts'));
+app.use(express.static(__dirname+'/bootstrap-4.0.0-dist/js'));
 app.use(morgan('dev'));
 app.use(function(req, res, next){
 res.setHeader("Access-Control-Allow-Origin", "*");
@@ -48,35 +31,49 @@ res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-H
 next();
 });
 
-// Firebase.initializeApp({
-//     databaseURL: "https://console.firebase.google.com/project/wedding-invitation-b1ce3/firestore/data~2Fguests~2F0",
-//     serviceAccount: './wedding-invitation-b1ce3-firebase-adminsdk-g57q7-99e82e8fe9.json', //this is file that I downloaded from Firebase Console
-//     });
-//console.log('running')
-
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname +'/index.html'));
-    
-});
 require("firebase/auth");
 require("firebase/firestore");
-const firebaseConfig = {
+
+  const config = {
     apiKey: "AIzaSyCrmsXIMrZ64aqBOy8qPDK4SwmgrcnzvhA",
     authDomain: "wedding-invitation-b1ce3.firebaseapp.com",
     databaseURL: "https://wedding-invitation-b1ce3-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "wedding-invitation-b1ce3",
-    storageBucket: "wedding-invitation-b1ce3.appspot.com",
-    messagingSenderId: "603995052886",
-    appId: "1:603995052886:web:a2d92fa603b824797654f7",
-    measurementId: "G-896KJ9QZ01"
-};
-firebase.initializeApp(firebaseConfig);
-//firebase.analytics();
+    
+  };
+  firebase.initializeApp(config);
+
+  // Get a reference to the database service
+  const database = firebase.database();
+  const dbref = firebase.database().ref('guests');
+const guests=[];
+app.get('/', function(req, res) {
+    
+    dbref.on("value", function(snapshot) {
+        
+        guests.push(snapshot.val());
+        console.log(guests[0])
+      }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      });
+    
+    
+    
+    res.sendFile(path.join(__dirname +'/index.html'));
+    
+});
 
 app.post('/', function(req, res) {
     let data = req.body;
-    console.log(data);
-    //res.send(url);
+    let fullName = data.FirstName + data.LastName;
+    for(i=0;i<=guests[0].length;i++){
+        console.log(guests[0][i])
+    }
+    let dataToSend = JSON.stringify(data);
+    database.ref('guests/'+num).set(dataToSend).then(function(){console.log(dataToSend);num++;}).catch()
+
+        
+    console.log(dataToSend);
+    res.sendFile(path.join(__dirname +'/confirmation.html'));
 });
 
 app.listen(port, () => console.log(`wedding-invitation showing on port ${port}!`));

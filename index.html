@@ -42,16 +42,17 @@
     
 </head>
 <body>
-    <img id="invite" class="center fit" src="DSC_0070.JPG" style="scale: ;" >
+    <img id="invite" class="center fit" src="DSC_0070.JPG" >
     <img id="invitation" class="center fit" src="Text.jpg" style="position: relative;">
     <!-- <div id='paw' class='overlay'><img id="catPaw" class="text"src="catPaw.jpg" style="-webkit-filter: invert(1); filter: invert(1); background-color: green;"></div> -->
     <div id="paw" class="blink overlay"><div id="text" class="text"><p>Това писмо беше специално изпратено за Вас.</p><p> Кликнете за да го отворите!</p></div></div>
-    <div id="overlay" class="blink overlay"><div id="text2" class="text">Настинете тук за да приемете!</p></div>
+    <div id="overlay" class="blink overlay"><div id="text2" class="text">Настинете тук за да приемете поканата!</p></div>
 
 <script src="jquery.js"></script>
+<script src="bootstrap.js"></script>
 <script type="text/javascript" language="JavaScript">
     function controlImages() { 
-        // $('#paw').css('display','block').show()
+        var clicked = false
         $('#paw').fadeIn(10000)
         
         $('#paw').click(function(){
@@ -60,22 +61,43 @@
                 $('#invitation').show(4000)
                 setTimeout(()=>{
                     $('#overlay').css('display','block')},10000)
-                // })
+                
                 blink('#overlay')
                                  
                 
                 
-        })       
+        })   
+        $('#overlay').click(function(){
+            clicked=true
+            
+            let form = $('<form action="/" method="post">')
+            let firstName= $('<div class="form-group row"><label for="inputFirstName" class="col-sm-4 col-form-label">Име</label><div class="col-sm-10"><input name="FirstName" type="text" class="form-control" id="inputFirstName" placeholder="Име" name="firstName"></div></div>')
+            let lastName=$('<div class="form-group row"><label for="inputLastName" class="col-sm-2 col-form-label">Фамилия</label><div class="col-sm-10"><input name="LastName" type="text" class="form-control" id="inputLastName" placeholder="Фамилия"></div></div>')
+            let people=$('<div class="form-group row"><label for="inputNumber" class="col-sm-2 col-form-label">Плюс 1</label><div class="col-sm-10"><input name="Plus"type="number" class="form-control" id="inputNumber" placeholder="0"></div></div>')
+            let hotelRoom = $('<div class="form-group row"><div class="col-sm-10 offset-sm-2"><label class="form-check-label"><input name="Hotel" type="checkbox"> Желая да бъда/ем настанени в хотела!</label></div></div>')
+            let submit = $('<div class="form-group row"><div class="col-sm-10 offset-sm-2"><input type="submit" class="btn btn-primary" style="width:20% height 10%">Потвърди</input></div></div>')
+            firstName.appendTo(form)
+            lastName.appendTo(form)
+            people.appendTo(form)
+            hotelRoom.appendTo(form)          
+            submit.appendTo(form)
+            form.addClass('overlay').addClass('text').addClass('fit').appendTo($('body'))
+        })    
         
         
-    }
-    function blink(selector){
-            $(selector).fadeOut(4000, function(){
+    
+    function blink(selector){        
+            $(selector).fadeOut(4000, function(){                
             $(this).fadeIn(4000, function(){
-            blink(this);
+            if(clicked===false) blink(this);
+            else $(selector).css('display','none').hide()
          });
         });
         }
+    }
+    
+        
+    
     $(document).ready(function() {
         $('#paw').hide()
         $('#overlay').hide()
@@ -85,10 +107,6 @@
 </script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
 
 </body>
 </html>
