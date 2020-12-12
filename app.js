@@ -67,14 +67,16 @@ app.post('/', function(req, res) {
     let data = req.body;
     let dataToSend = JSON.stringify(data);
     let fullName = data.FirstName + data.LastName;
+    console.log(fullName)
     dbref.orderByValue().on("value", function(snapshot) {
-        snapshot.forEach(function(data) {
+        snapshot.forEach(function(data){
           let fullN = (JSON.parse(data.val()).FirstName + JSON.parse(data.val()).LastName).toLowerCase();
-            if(fullName==fullN.toLowerCase()){
+          console.log(fullN)
+            if(fullName===fullN.toLowerCase()){
             database.ref('guests/'+data.key).set(dataToSend).then(function(){console.log(dataToSend);num++;}).catch()
             change=true;
             res.sendFile(path.join(__dirname +'/confirmation.html'));
-          }
+        }
           
         });
     });
