@@ -63,17 +63,29 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
+    let change = false;
     let data = req.body;
-    let fullName = data.FirstName + data.LastName;
-    for(i=0;i<=guests[0].length;i++){
-        console.log(guests[0][i])
-    }
     let dataToSend = JSON.stringify(data);
-    database.ref('guests/'+num).set(dataToSend).then(function(){console.log(dataToSend);num++;}).catch()
+    let fullName = data.FirstName + data.LastName;
+    dbref.orderByValue().on("value", function(snapshot) {
+        snapshot.forEach(function(data) {
+          let fullN = (JSON.parse(data.val()).FirstName + JSON.parse(data.val()).LastName).toLowerCase();
+            if(fullName==fullN.toLowerCase()){
+            database.ref('guests/'+data.key).set(dataToSend).then(function(){console.log(dataToSend);num++;}).catch()
+            change=true;
+            res.sendFile(path.join(__dirname +'/confirmation.html'));
+          }
+          
+        });
+    });
+    
+    if(change!=true){
+    database.ref('guests/'+num).set(dataToSend).then(function(){num++;}).catch()
+    }
 
         
     console.log(dataToSend);
-    res.sendFile(path.join(__dirname +'/confirmation.html'));
+    
 });
 
 app.listen(port, () => console.log(`wedding-invitation showing on port ${port}!`));
