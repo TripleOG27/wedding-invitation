@@ -82,7 +82,7 @@ app.post('/', function(req, res) {
     if(change!=true){
     database.ref('guests/'+num).set(dataToSend).then(function(){num++;}).catch()
     }
-
+    res.sendFile(path.join(__dirname +'/confirmation.html'));
         
     console.log(dataToSend);
     
