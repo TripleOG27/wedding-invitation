@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const port = process.env.PORT ||3000;
-let num = 0
+let num = 10
+let num2 = 10
 // const admin = require("firebase-admin");
 const Firebase = require('firebase');
 const firebase = require("firebase/app");
@@ -73,7 +74,7 @@ app.post('/', function(req, res) {
           let fullN = (JSON.parse(data.val()).FirstName + JSON.parse(data.val()).LastName).toLowerCase();
           console.log(fullN)
             if(fullName===fullN.toLowerCase()){
-            database.ref('guests/'+data.key).set(dataToSend).then(function(){console.log(dataToSend);num++;}).catch()
+            database.ref('guests/'+data.key).set(dataToSend).then(function(){console.log(dataToSend);num++;num2++}).catch()
             change=true;
             res.sendFile(path.join(__dirname +'/confirmation.html'));
         }
@@ -82,7 +83,7 @@ app.post('/', function(req, res) {
     });
     
     if(change!=true){
-    database.ref('guests/'+num).set(dataToSend).then(function(){num++;}).catch()
+    database.ref('guests/'+(num*num2)).set(dataToSend).then(function(){num++; num++}).catch()
     }
     res.sendFile(path.join(__dirname +'/confirmation.html'));
         
